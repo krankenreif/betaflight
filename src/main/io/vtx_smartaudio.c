@@ -450,6 +450,7 @@ static void saSendFrame(uint8_t *buf, int len)
         serialWrite(smartAudioSerialPort, buf[i]);
     }
 
+    serialWrite(smartAudioSerialPort, 0x00);
     sa_lastTransmissionMs = millis();
     saStat.pktsent++;
 }
@@ -498,7 +499,7 @@ typedef struct saCmdQueue_s {
     int len;
 } saCmdQueue_t;
 
-#define SA_QSIZE 6     // 1 heartbeat (GetSettings) + 2 commands + 1 slack
+#define SA_QSIZE 4     // 1 heartbeat (GetSettings) + 2 commands + 1 slack
 static saCmdQueue_t sa_queue[SA_QSIZE];
 static uint8_t sa_qhead = 0;
 static uint8_t sa_qtail = 0;
@@ -679,7 +680,7 @@ bool vtxSmartAudioInit(void)
 
     serialPortConfig_t *portConfig = findSerialPortConfig(FUNCTION_VTX_SMARTAUDIO);
     if (portConfig) {
-        portOptions_e portOptions = SERIAL_STOPBITS_2;
+        portOptions_e portOptions = SERIAL_STOPBITS_1;
 #if defined(USE_VTX_COMMON)
         portOptions = portOptions | (vtxConfig()->halfDuplex ? SERIAL_BIDIR | SERIAL_BIDIR_PP : SERIAL_UNIDIR);
 #else
