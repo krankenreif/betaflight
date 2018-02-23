@@ -447,6 +447,7 @@ static void saSendFrame(uint8_t *buf, int len)
         serialWrite(smartAudioSerialPort, buf[i]);
     }
 
+    serialWrite(smartAudioSerialPort, 0x00);
     sa_lastTransmissionMs = millis();
     saStat.pktsent++;
 }
@@ -676,7 +677,7 @@ bool vtxSmartAudioInit(void)
 
     serialPortConfig_t *portConfig = findSerialPortConfig(FUNCTION_VTX_SMARTAUDIO);
     if (portConfig) {
-        portOptions_e portOptions = SERIAL_STOPBITS_2 | SERIAL_BIDIR_NOPULL;
+        portOptions_e portOptions = SERIAL_STOPBITS_2;
 #if defined(USE_VTX_COMMON)
         portOptions = portOptions | (vtxConfig()->halfDuplex ? SERIAL_BIDIR | SERIAL_BIDIR_PP : SERIAL_UNIDIR);
 #else
